@@ -34,17 +34,12 @@ WORKDIR /var/lib/neo4j
 VOLUME /data
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY parser.py /parser.py
+COPY debug.out /debug.out
+COPY script.sh /script.sh
 
 EXPOSE 7474 7473 7687
 
-# ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh", "neo4j"]
-#
-COPY script.py /script.py
-COPY debug.out /debug.out
-COPY script.sh /script.sh
-# WORKDIR /script
-
-#
 RUN apk add --no-cache \
 	python3 \
 	python-dev \
@@ -54,8 +49,6 @@ RUN apk add --no-cache \
 	&& pip3 install neo4jrestclient \
 	&& chmod 777 /script.sh
 
-# ENTRYPOINT ["python3"]
-# CMD ["/script.py"]
 ENTRYPOINT ["sh"]
 CMD ["/script.sh"]
 

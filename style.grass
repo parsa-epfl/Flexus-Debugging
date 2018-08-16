@@ -75,5 +75,8 @@ defaultCaption: "<id>";
 diameter: 10px;
 }
 relationship.done {
-caption: "<type>";
+caption: "{hide}";
+}
+relationship.match {
+caption: "{hide}";
 }
