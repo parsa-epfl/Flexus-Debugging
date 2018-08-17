@@ -10,8 +10,8 @@ Before you start, make sure you have ***'debug.out'*** file under 'Flexus-Debugg
 *Please refer **How to make debug.out** if you need help*
 
 You can build docker with following command
-<pre><code>sudo chown -R root:root data</code></pre>
-<pre><code>sudo docker build -t test:0.1 .</code></pre>
+<pre><code>sudo chown -R root:root data
+sudo docker build -t test:0.1 .</code></pre>
 
 
 
