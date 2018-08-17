@@ -1,9 +1,7 @@
 import re
 import csv
-#  from neo4jrestclient.client import GraphDatabase
-#  db = GraphDatabase("http://localhost:7474", username="neo4j", password="s")
 
-# Parsed Data
+# Regular Expression Pattern 
 pattern = re.compile(r"(?P<LineNum>\d+)\s"
                      r"<(?P<Components>.*?):"
                      r"(?P<Comp_line>\d+)>\s"
@@ -28,7 +26,6 @@ pattern_instr = re.compile(r"(?P<LineNum>\d+)\s"
 
 class Line:
     def __init__(self, parsed):
-
         self.LineNum = parsed.group('LineNum')
         self.Components = parsed.group('Components')
         self.Comp_line = parsed.group('Comp_line')
@@ -41,6 +38,7 @@ class Line:
         self.DStream = parsed.group('DStream')
         self.Msg = parsed.group('Msg')
 
+    #set unique ID for a node. For Line node, it would be a LineNum
     def set_node(self, node):
         self.node = node
 
@@ -71,6 +69,7 @@ class Instr:
         self.Disas = parsed.group('Disas')
         self.Semantic = parsed.group('Semantic')
 
+    #set unique ID for a node. For Instr node, it would be a LineNum
     def set_node(self, node):
         self.node = node
 
@@ -93,6 +92,7 @@ class Pattern:
         self.addrs.append(addr)
         self.type = "Addr"
 
+    #set unique ID for a node. For Pattern node, it would be a type
     def set_node(self, node):
         self.node = node
 
@@ -103,7 +103,7 @@ class Pattern:
         return self.type
 
     def get_average(self):
-
+        #get average cycle within a pattern
         if self.type == "Serial":
             for s in self.serials:
 
@@ -141,12 +141,12 @@ class Pattern:
                 self.avg_pattern_cycle[i] /= len(self.addrs)
 
         return self.avg_pattern_cycle
+
 lines = {}
 dict = {}               # dict[('Serial', '241'), ('Addr', '0xp:0413da82c')] = Line
 dict_instr = {}         # dict['instr'] = instr_line
 patterns_serial = {}    # patterns[str(Comp:line#)] = Pattern
 patterns_addr = {}      # patterns[str(Comp:line#)] = Pattern
-
 
 if __name__ == "__main__":
 
@@ -218,7 +218,6 @@ if __name__ == "__main__":
             line = Line(parsed)
 
             if parsed_instr:
-
                 instr = Instr(parsed_instr)
                 csvWriter_line.writerow([line.LineNum, line.Components, line.Comp_line, line.Cycle,
                 line.MemMsg, line.Addr, line.Size, line.Serial, line.Core, line.DStream, line.Msg, instr.InstrNum, instr.CPU_id, instr.PC, instr.Opcode, instr.Disas, instr.Semantic])
@@ -269,10 +268,8 @@ if __name__ == "__main__":
         if k[0] == 'Serial':
             csvWriter_Serial.writerow(['s'+k[1], k[1]])
             current_trace["start"] = 's'+k[1]
-        
-        elif k[0] == 'Addr':
+        else:
             csvWriter_Addr.writerow(['a'+k[1], k[1]])
-            current_trace["start"] = 'a'+k[1]
 
         last = "start"
         last_cycle = v[0].Cycle
@@ -341,24 +338,6 @@ if __name__ == "__main__":
                 csvWriter_match.writerow(['P:S:'+str(pscnt), "-", parent])
 
                 pscnt+=1
-        #
-        # elif k[0] == 'Addr':
-        #     if pattern in patterns_addr:
-        #         patterns_addr[pattern].add_addr(k)
-        #         pattern_node = patterns_addr[pattern].get_node()
-        #         csvWriter_match.writerow([pattern_node, " ", parent])
-        #
-        #     else:
-        #         p = Pattern(pattern)
-        #         p.add_addr(k)
-        #         patterns_addr[pattern] = p
-        #
-        #         csvWriter_pattern_addr.writerow(['P:A:'+str(pacnt), pattern])
-        #         p.set_node('P:A:'+str(pacnt))
-        #
-        #         csvWriter_match.writerow(['P:A:'+str(pacnt), " ", parent])
-        #
-        #         pacnt+=1
 
     print("END - Categorize lines\n")
 
@@ -387,17 +366,7 @@ if __name__ == "__main__":
 
     print("END - avg_serial calculation\n")
 
-    # print("START - avg_cycle for addr calculation")
-    # for pattern_str, Ptn in patterns_addr.items():
-    #
-    #     avg_cycle = Ptn.get_average()
-    #     for addr in Ptn.addrs:
-    #         for i in range(0, len(dict[addr])):
-    #             save_avg[dict[addr][i].get_rel('Addr')] = avg_cycle[i]
-    # print("END - avg_cycle for addr calculation\n")
-
     f_next_temp.close()
-    
     f_next_temp = open('next_temp.csv', 'r')
     csvReader = csv.reader(f_next_temp)
 
