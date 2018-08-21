@@ -43,10 +43,47 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 
 # How to use Flexus Debugger #
 
+* Style
+You can import ***style.grass*** file into your browser by drag&drop to make your graph have better looking.
+
+* Node and Relationships
+When you open the Neo4j browser, you can see every **Node Labels** and **Relationships**. 
+You can view them clicking the name of nodes/relationships. 
+
+* Browser Settings
+It shows maximum 25 nodes/relationships by default. You can change this maximum value at **Browser Settings** in the bottom left corner. Or you can use Cypher query langauges instead.
+
+* Expand Relationships
+You can expand a node by double-clicking it. You can see every nodes and relationships of the node, and follow them to debug more easily.
+
+
+
+* Cypher query language
+
+Neo4j Cypher Refcard 3.4: [here][Refcard]
+Intro to Cypher: [here][Cypher]
+
+Cypher is SQL-inspired language for describing patterns in graphs visually using an ASCII-art syntax.
+There are some sample scripts in **Scripts.cypher** file.
+
+  + MATCH(n:Serial) RETURN count(n)
+	: This script returns the number of Serials in the log file.
+  
+  + MATCH(a)-[\*]->(n:Serial)-[\*]->(b)<-[\*]-(c) WHERE n.serial="483" RETURN n, a, b, c
+    : This script shows whole information related to 'serial #483'.
+	  You can see the address, instruction, pattern and traces of the serial.
+ 
+  + MATCH(p:Pattern_Serial)-[\*]->(n)<-[\*0..1]-(m) WHERE p.patternId="P:S:5" RETURN p, n, m
+    : This script shows every serial matched to the given pattern, and their information.
+
+  + MATCH(n:Addr)-[\*]->(m)<-[\*]-(k) WHERE n.addr="0xp:0080352c0" RETURN n, m, k
+	: This script shows whole information related to 'address 0xp:0080352c0". 
+
+Cypher query language is easy and powerful, so you can do much more things with it.
 
 # How to make debug.out #
-Before run Flexus, you have to apply the patch to make the simulator have more verbosity.
-You can find the patch file named ***link.patch***
+Before run Flexus, you need to apply the patch for more verbosity of the simulator.
+You can find the patch file named ***link.patch***/ under Flexus-Debugging/ directory.
 
 ## Compiling ##
 **Trace**
@@ -66,8 +103,10 @@ You can find the patch file named ***link.patch***
 <pre><code>$ run_job -clobber -ma -cfg cortex-a15-1core-1024kl2 -local -run timing -job timing-a15-1core-1024kl2-$1 -state cortex-a15-1core-1024kl2 -postprocess "/home/parsacom/tools/flexus/postprocess.sh" CMP.LwSharedNUCA.OoO nutch/1cpu </code></pre>
 
 After these steps, copy the simulator to the **.skel** folder, and run **go.sh** again.
-Press Ctrl-c to stop simulation, enable more verbosity by **flexus.debug-set-severity-level vverb**, and hit r to terminate.
+Press Ctrl-c to stop simulation, enable more verbosity by **flexus.debug-set-severity-level vverb**, and hit 'r'.
 
 Then you can find your **debug.out** with more information. Move the file under the **Flexus-Debugging/** directory. 
 
 [neo4jweb]:https://neo4j.com/ 
+[Refcard]:https://neo4j.com/docs/cypher-refcard/current/
+[Cypher]:https://neo4j.com/developer/cypher-query-language/
