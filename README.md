@@ -43,25 +43,29 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 
 # How to use Flexus Debugger #
 
-* Style
+### * Style ###
+
 You can import ***style.grass*** file into your browser by drag&drop to make your graph have better looking.
 
-* Node and Relationships
+### * Node and Relationships ###
+
 When you open the Neo4j browser, you can see every **Node Labels** and **Relationships**. 
 You can view them clicking the name of nodes/relationships. 
 
-* Browser Settings
+### * Browser Settings ###
+
 It shows maximum 25 nodes/relationships by default. You can change this maximum value at **Browser Settings** in the bottom left corner. Or you can use Cypher query langauges instead.
 
-* Expand Relationships
+### * Expand Relationships ###
+
 You can expand a node by double-clicking it. You can see every nodes and relationships of the node, and follow them to debug more easily.
 
 
+### * Cypher query language ###
 
-* Cypher query language
+** Neo4j Cypher Refcard 3.4: [here][Refcard] **
 
-Neo4j Cypher Refcard 3.4: [here][Refcard]
-Intro to Cypher: [here][Cypher]
+** Intro to Cypher: [here][Cypher] **
 
 Cypher is SQL-inspired language for describing patterns in graphs visually using an ASCII-art syntax.
 There are some sample scripts in **Scripts.cypher** file.
