@@ -39,43 +39,44 @@ Peak memory usage: 1.03 GB</code></pre>
 Then, Neo4j server will be terminated and restarted.
 After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze your log file.
 
-***(Neo4j Browser: http://localhost:7474/)***
+***(Neo4j Browser: http://localhost:7474/)***; Remote access is also supported.
 
 # How to use Flexus Debugger #
 
 ![Serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/serial.png)
 
-* Line: the smallest grey circles
-* Serial: the red circle
-* Address: the green circle
-* Instrunction: the purple circle
+* **Line**: the smallest grey circles
+* **Serial**: the red circle
+* **Address**: the green circle
+* **Instrunction**: the purple circle
+
 Each line nodes are categorized based on *serial, address*, and *instruction*.
 
-* Trace: the yellow graph; You can see the trace of lines visually. 
+* **Trace**: the yellow graph; You can see the trace of lines visually. 
   Each arrows have **#order (cycle diff)**, and each nodes have component name within the circle.
 
-* Pattern: the blue circle; Some serials with same trace, which means exactly same number of processes with identical component name, can be categorized as same pattern.
+* **Pattern**: the blue circle; Some serials with same trace, which means exactly same number of processes with identical component name, can be categorized as same pattern.
 
 
-### * Style ###
+## Style ##
 
 You can import ***style.grass*** file into your browser by drag&drop to make your graph have better looking.
 
-### * Node and Relationships ###
+## Node and Relationships ##
 
 When you open the Neo4j browser, you can see every **Node Labels** and **Relationships**. 
 You can list them clicking the name of nodes/relationships. 
 
-### * Expand Relationships ###
+## Expand Relationships ##
 
 You can expand a node by double-clicking it. You can see every nodes and relationships of the node, and follow them to debug more easily.
 
 
-### * Browser Settings ###
+## Browser Settings ##
 
 It shows maximum 25 nodes/relationships by default. You can change this maximum value at **Browser Settings** in the bottom left corner. Or you can use Cypher query langauges instead.
 
-### * Cypher query language ###
+## Cypher query language ##
 
 Cypher is SQL-inspired language for describing patterns in graphs visually using an ASCII-art syntax.
 There are some sample scripts in **Scripts.cypher** file.
