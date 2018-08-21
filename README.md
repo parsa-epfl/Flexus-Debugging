@@ -60,7 +60,7 @@ Each line nodes are categorized based on *serial, address*, and *instruction*.
 
 ## Style ##
 
-You can import ***style.grass*** file into your browser by drag&drop to make your graph have better looking.
+You can import ***Flexus-Debugging/setting/style.grass*** file into your browser by drag&drop to make your graph have better looking.
 
 ## Node and Relationships ##
 
@@ -79,7 +79,7 @@ It shows maximum 25 nodes/relationships by default. You can change this maximum 
 ## Cypher query language ##
 
 Cypher is SQL-inspired language for describing patterns in graphs visually using an ASCII-art syntax.
-There are some sample scripts in **Scripts.cypher** file.
+There are some sample scripts in **Flexus-Debugging/setting/Scripts.cypher** file.
 
   + ***MATCH(n:Serial) RETURN count(n)***
 
