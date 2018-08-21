@@ -25,6 +25,19 @@ Bolt enabled on 0.0.0.0:7687.
 Started.
 Remote interface available at http://localhost:7474/</code></pre>
 
+After a few seconds, log parsing script will run and terminate with following message.
+
+<pre><code>IMPORT DONE in 5s 250ms.
+Imported:
+   166237 nodes
+   387298 relationships
+   1738752 properties
+Peak memory usage: 1.03 GB</code></pre>
+
+Then, Neo4j server will be terminated and restarted. 
+After seeing Neo4j **Started** message, you can use Neo4j browser to analyze your log file.
+**(Neo4j Browser: http://localhost:7474/)**
+
 # How to use Flexus Debugger #
 
 
