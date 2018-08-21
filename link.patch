@@ -1,0 +1,133 @@
+diff --git a/flexus/trunk/components/Common/Slices/MemOp.cpp b/flexus/trunk/components/Common/Slices/MemOp.cpp
+index 4596c2f..6eeffbc 100644
+--- a/flexus/trunk/components/Common/Slices/MemOp.cpp
++++ b/flexus/trunk/components/Common/Slices/MemOp.cpp
+@@ -41,6 +41,10 @@ std::ostream & operator <<( std::ostream & anOstream, eOperation op) {
+ }
+ 
+ std::ostream & operator << ( std::ostream & anOstream, MemOp const & aMemOp) {
++  if (aMemOp.theInstruction) {
++  anOstream
++      << "instr=>> " << *(aMemOp.theInstruction) << " << ";
++  }
+   anOstream
+       << aMemOp.theOperation
+       << "(" << aMemOp.theSize << ") "
+diff --git a/flexus/trunk/components/Common/Slices/MemOp.hpp b/flexus/trunk/components/Common/Slices/MemOp.hpp
+index d6ee44a..71d00de 100644
+--- a/flexus/trunk/components/Common/Slices/MemOp.hpp
++++ b/flexus/trunk/components/Common/Slices/MemOp.hpp
+@@ -59,6 +59,7 @@ struct MemOp : boost::counted_base {
+   bool theAtomic;
+   bool theNAW;
+   boost::intrusive_ptr< TransactionTracker > theTracker;
++  boost::intrusive_ptr<AbstractInstruction> theInstruction;
+   MemOp( )
+     : theOperation( kINVALID_OPERATION )
+     , theSize( kWord )
+@@ -89,6 +90,7 @@ struct MemOp : boost::counted_base {
+     , theAtomic(anOther.theAtomic)
+     , theNAW(anOther.theNAW)
+     , theTracker( anOther.theTracker )
++    , theInstruction(anOther.theInstruction)
+   {}
+ 
+ };
+diff --git a/flexus/trunk/components/Common/Slices/MemoryMessage.cpp b/flexus/trunk/components/Common/Slices/MemoryMessage.cpp
+index ef7713b..282f03d 100644
+--- a/flexus/trunk/components/Common/Slices/MemoryMessage.cpp
++++ b/flexus/trunk/components/Common/Slices/MemoryMessage.cpp
+@@ -108,14 +108,20 @@ std::ostream & operator << (std::ostream & s, MemoryMessage::MemoryMessageType c
+   return s << message_types[aMemMsgType];
+ }
+ std::ostream & operator << (std::ostream & s, MemoryMessage const & aMemMsg) {
+-  return s << "MemoryMessage[" << aMemMsg.type()
++    if (aMemMsg.theInstruction) {
++        s << "instr=>> " << *(aMemMsg.theInstruction) << " << ";
++    }
++         s
++         << "MemoryMessage[" << aMemMsg.type()
+          << "]: Addr:0x" << std::hex << aMemMsg.address()
+          << " Size:" << std::dec << aMemMsg.reqSize() << " Serial: " << aMemMsg.serial()
+          << " Core: " << aMemMsg.coreIdx()
+          << " DStream: " << std::boolalpha << aMemMsg.isDstream()
+          << " Outstanding Msgs: " << aMemMsg.outstandingMsgs()
+          << (aMemMsg.ackRequired() ? (aMemMsg.ackRequiresData() ? " Requires Ack+Data" : " Requires Ack") : "");
+-}
++
++         return s;
++} 
+ 
+ } //namespace SharedTypes
+ } //namespace Flexus
+diff --git a/flexus/trunk/components/Common/Slices/MemoryMessage.hpp b/flexus/trunk/components/Common/Slices/MemoryMessage.hpp
+index 90622e3..816ff3c 100644
+--- a/flexus/trunk/components/Common/Slices/MemoryMessage.hpp
++++ b/flexus/trunk/components/Common/Slices/MemoryMessage.hpp
+@@ -14,6 +14,8 @@
+ #include <components/Common/Slices/FillLevel.hpp>
+ #include <components/Common/Slices/FillType.hpp>
+ 
++#include <components/Common/Slices/AbstractInstruction.hpp>
++
+ namespace Flexus {
+ namespace SharedTypes {
+ 
+@@ -983,6 +985,9 @@ struct MemoryMessage : public boost::counted_base { /*, public FastAlloc*/
+     return ProbedNotPresent;
+   }
+ 
++public:
++  boost::intrusive_ptr<AbstractInstruction> theInstruction;
++
+ private:
+   MemoryMessageType theType;
+   MemoryAddress theAddress;
+diff --git a/flexus/trunk/components/uArch/CoreModel/arbiter.cpp b/flexus/trunk/components/uArch/CoreModel/arbiter.cpp
+index 80edb3b..ccd337a 100644
+--- a/flexus/trunk/components/uArch/CoreModel/arbiter.cpp
++++ b/flexus/trunk/components/uArch/CoreModel/arbiter.cpp
+@@ -408,6 +408,7 @@ void CoreImpl::issue(boost::intrusive_ptr<Instruction> anInstruction ) {
+   tracker->setSource("uArch");
+   tracker->setOS(system);
+   op->theTracker = tracker;
++  op->theInstruction = anInstruction;
+   mshr.theTracker = tracker;
+   if (lsq_entry->isAtomic() && issue_op == kAtomicPreload) {
+     tracker->setSpeculativeAtomicLoad(true);
+@@ -648,7 +649,7 @@ void CoreImpl::issueStorePrefetch( boost::intrusive_ptr<Instruction> anInstructi
+   tracker->setAddress( op->thePAddr );
+   tracker->setInitiator(theNode);
+   op->theTracker = tracker;
+-
++  op->theInstruction = anInstruction;
+   theMemoryPorts.push_back(op);
+   if (lsq_entry->theOperation == kStore) {
+     ++theStorePrefetches;
+diff --git a/flexus/trunk/components/uArch/uArchImpl.cpp b/flexus/trunk/components/uArch/uArchImpl.cpp
+index 34e7ca0..84301fe 100644
+--- a/flexus/trunk/components/uArch/uArchImpl.cpp
++++ b/flexus/trunk/components/uArch/uArchImpl.cpp
+@@ -415,6 +415,9 @@ private:
+             DBG_Assert( false,  ( << "Unknown memory operation type: " << op->theOperation ) );
+         }
+       }
++      
++      operation->theInstruction = op->theInstruction;
++
+       operation->reqSize() = op->theSize;
+       if (op->theTracker) {
+         transport.set(TransactionTrackerTag, op->theTracker);
+diff --git a/flexus/trunk/components/v9Decoder/v9Instruction.cpp b/flexus/trunk/components/v9Decoder/v9Instruction.cpp
+index 5a22c90..5de78bf 100644
+--- a/flexus/trunk/components/v9Decoder/v9Instruction.cpp
++++ b/flexus/trunk/components/v9Decoder/v9Instruction.cpp
+@@ -44,7 +44,7 @@ void satisfyAtDispatch( SemanticInstruction * inst, std::list<InternalDependance
+ void v9Instruction::describe(std::ostream & anOstream) const {
+   Flexus::Simics::Processor cpu = Flexus::Simics::Processor::getProcessor(theCPU);
+   anOstream << "#" << theSequenceNo << "[" << std::setfill('0') << std::right << std::setw(2) << cpu->id() <<  "] "
+-            << "@" << thePC  << " |" << std::hex << std::setw(8) << theOpcode << std::dec << "| "
++            << "@PC= " << thePC  << " opc=| " << std::hex << std::setw(8) << theOpcode << std::dec << " | Disas="
+             << std::left << std::setw(30) << std::setfill(' ') << disassemble();
+   if ( theRaisedException) {
+     anOstream << " {raised " << cpu->describeException(theRaisedException) << "(" << theRaisedException << ")} ";
