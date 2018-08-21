@@ -72,7 +72,7 @@ There are some sample scripts in **Scripts.cypher** file.
   
   + ***MATCH(a)-[\*]->(n:Serial)-[\*]->(b)<-[\*]-(c) WHERE n.serial="483" RETURN n, a, b, c***
 
-	![serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/serial_sample.png)
+	![serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/serial.png)
 
     : This script shows whole information related to 'serial #483'.
 	  You can see the address, instruction, pattern and traces of the serial.
