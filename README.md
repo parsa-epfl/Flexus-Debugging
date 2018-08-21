@@ -72,22 +72,27 @@ There are some sample scripts in **Scripts.cypher** file.
   
   + MATCH(a)-[\*]->(n:Serial)-[\*]->(b)<-[\*]-(c) WHERE n.serial="483" RETURN n, a, b, c
 
-	
+	![serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/serial_sample.png)
 
     : This script shows whole information related to 'serial #483'.
 	  You can see the address, instruction, pattern and traces of the serial.
  
   + MATCH(p:Pattern_Serial)-[\*]->(n)<-[\*0..1]-(m) WHERE p.patternId="P:S:5" RETURN p, n, m
 
+	![pattern_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/pattern_sample.png)
+
     : This script shows every serial matched to the given pattern, and their information.
 
   + MATCH(n:Addr)-[\*]->(m)<-[\*]-(k) WHERE n.addr="0xp:0080352c0" RETURN n, m, k
+
+	![addr_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/addr_sample.png)
 
 	: This script shows whole information related to 'address 0xp:0080352c0". 
 
 Cypher query language is easy and powerful, so you can do much more things with it.
 
 **Neo4j Cypher Refcard 3.4: [here][Refcard]**
+
 **Intro to Cypher: [here][Cypher]**
 
 
