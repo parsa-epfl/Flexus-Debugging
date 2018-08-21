@@ -43,6 +43,20 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 
 # How to use Flexus Debugger #
 
+![Serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/readme/images/serial.png)
+
+* Line: the smallest grey circles
+* Serial: the red circle
+* Address: the green circle
+* Instrunction: the purple circle
+Each line nodes are categorized based on *serial, address*, and *instruction*.
+
+* Trace: the yellow graph; You can see the trace of lines visually. 
+  Each arrows have **#order (cycle diff)**, and each nodes have component name within the circle.
+
+* Pattern: the blue circle; Some serials with same trace, which means exactly same number of processes with identical component name, can be categorized as same pattern.
+
+
 ### * Style ###
 
 You can import ***style.grass*** file into your browser by drag&drop to make your graph have better looking.
