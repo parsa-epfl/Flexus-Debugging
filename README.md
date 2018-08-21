@@ -50,40 +50,46 @@ You can import ***style.grass*** file into your browser by drag&drop to make you
 ### * Node and Relationships ###
 
 When you open the Neo4j browser, you can see every **Node Labels** and **Relationships**. 
-You can view them clicking the name of nodes/relationships. 
-
-### * Browser Settings ###
-
-It shows maximum 25 nodes/relationships by default. You can change this maximum value at **Browser Settings** in the bottom left corner. Or you can use Cypher query langauges instead.
+You can list them clicking the name of nodes/relationships. 
 
 ### * Expand Relationships ###
 
 You can expand a node by double-clicking it. You can see every nodes and relationships of the node, and follow them to debug more easily.
 
 
+### * Browser Settings ###
+
+It shows maximum 25 nodes/relationships by default. You can change this maximum value at **Browser Settings** in the bottom left corner. Or you can use Cypher query langauges instead.
+
 ### * Cypher query language ###
-
-** Neo4j Cypher Refcard 3.4: [here][Refcard] **
-
-** Intro to Cypher: [here][Cypher] **
 
 Cypher is SQL-inspired language for describing patterns in graphs visually using an ASCII-art syntax.
 There are some sample scripts in **Scripts.cypher** file.
 
   + MATCH(n:Serial) RETURN count(n)
+
 	: This script returns the number of Serials in the log file.
   
   + MATCH(a)-[\*]->(n:Serial)-[\*]->(b)<-[\*]-(c) WHERE n.serial="483" RETURN n, a, b, c
+
+	
+
     : This script shows whole information related to 'serial #483'.
 	  You can see the address, instruction, pattern and traces of the serial.
  
   + MATCH(p:Pattern_Serial)-[\*]->(n)<-[\*0..1]-(m) WHERE p.patternId="P:S:5" RETURN p, n, m
+
     : This script shows every serial matched to the given pattern, and their information.
 
   + MATCH(n:Addr)-[\*]->(m)<-[\*]-(k) WHERE n.addr="0xp:0080352c0" RETURN n, m, k
+
 	: This script shows whole information related to 'address 0xp:0080352c0". 
 
 Cypher query language is easy and powerful, so you can do much more things with it.
+
+**Neo4j Cypher Refcard 3.4: [here][Refcard]**
+**Intro to Cypher: [here][Cypher]**
+
 
 # How to make debug.out #
 Before run Flexus, you need to apply the patch for more verbosity of the simulator.
