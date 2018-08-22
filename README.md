@@ -53,7 +53,7 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 Each line nodes are categorized based on *serial, address*, and *instruction*.
 
 * **Trace**: the yellow graph; You can see the trace of lines visually. 
-  Each arrows have **#order (cycle diff)**, and each nodes have component name within the circle.
+  Each arrows have **sequence # (cycle diff)**, and each nodes have component name within the circle.
 
 * **Pattern**: the blue circle; Some serials with same trace, which means exactly same number of processes with identical component name, can be categorized as same pattern.
 
