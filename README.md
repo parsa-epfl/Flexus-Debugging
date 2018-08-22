@@ -104,7 +104,7 @@ There are some sample scripts in **Flexus-Debugging/setting/Scripts.cypher** fil
 
 	![addr_sample](https://github.com/persona0220/Flexus-Debugging/blob/master/images/addr_sample.png)
 
-	: This script shows whole information related to 'address 0xp:0080352c0". 
+	: This script shows pattern, serials, and instructions related to 'address 0xp:0080352c0". 
 
 
 Cypher query language is easy and powerful, so you can do much more things with it.
