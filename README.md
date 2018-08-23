@@ -2,11 +2,9 @@
 
 Flexus Debugger is a debugging tool which can help analyze [Flexus][Flexus]. Flexus Debugger uses Python3 script to get important lines from the Flexus log file and to systemize them. It also uses [Neo4j][neo4jweb], a high-performance Graph Database, which supports all the features expected of a mature database including query language. 
 
-Neo4j: <https://neo4j.com>
-
-Flexus: <https://github.com/parsa-epfl/flexus>
-
-QFlex: <https://github.com/parsa-epfl/qflex>
+Neo4j: <https://neo4j.com>\n
+Flexus: <https://github.com/parsa-epfl/flexus>\n
+QFlex: <https://github.com/parsa-epfl/qflex>\n
 
 # How to start Flexus Debugger #
 
