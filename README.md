@@ -49,6 +49,32 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 
 ![Serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/master/images/serial.png)
 
+Flexus Debugger makes it much easier to analyze the log file of Flexus.
+
+Here is part of the sample *debug.out*.
+
+<pre><code>
+108 <MultiNicXImpl.hpp:169> {1606}- 01-nic   Packet contains: MemoryMessage[Fetch Reply]: Addr:0xp:007c4b000 Size:64 Serial: 345 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+111 <MemoryNetworkImpl.cpp:287> {1606}- Network Received msg From 1 to 0, on vc 0, serial: 252 Message =  MemoryMessage[Fetch Reply]: Addr:0xp:007c4b000 Size:64 Serial: 345 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+122 <CacheController.cpp:1773> {1606}- sys-L1d  sendFront (D-1, I-0) : instr=>> #1076[00] @PC= v:0010647b8 opc=| e403c01d | Disas=lduw [%o7 + %i5], %l2                 {executed} << MemoryMessage[Load Reply]: Addr:0xp:00fd6ff74 Size:4 Serial: 454 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+125 <CacheController.cpp:1773> {1606}- sys-L1d  sendFront (D-1, I-0) : instr=>> #1086[00] @PC= v:0010646cc opc=| d25e20a0 | Disas=ldx [%i0 + 160], %o1                  {executed} << MemoryMessage[Load Reply]: Addr:0xp:00800c0a0 Size:8 Serial: 455 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+127 <CacheImpl.cpp:238> {1606}- sys-L1d Sent on Port FrontSideOut_D [0]: instr=>> #1076[00] @PC= v:0010647b8 opc=| e403c01d | Disas=lduw [%o7 + %i5], %l2               {executed} << MemoryMessage[Load Reply]: Addr:0xp:00fd6ff74 Size:4 Serial: 454 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+131 <CacheImpl.cpp:238> {1606}- sys-L1d Sent on Port FrontSideOut_D [0]: instr=>> #1086[00] @PC= v:0010646cc opc=| d25e20a0 | Disas=ldx [%i0 + 160], %o1                {executed} << MemoryMessage[Load Reply]: Addr:0xp:00800c0a0 Size:8 Serial: 455 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+143 <CacheImpl.cpp:170> {1607}- sys-L1d Received on Port FrontSideIn(Request) [0]: instr=>> #1092[00] @PC= v:0010646e8 opc=| d85260fa | Disas=ldsh [%o1 + 250], %o4             {executed} << MemoryMessage[Load Request]: Addr:0xp:00800c0fa Size:2 Serial: 459 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+146 <CacheImpl.cpp:170> {1607}- sys-L1d Received on Port FrontSideIn(Request) [0]: instr=>> #1095[00] @PC= v:0010646f4 opc=| f85a60e0 | Disas=ldx [%o1 + 224], %i4              {executed} << MemoryMessage[Load Request]: Addr:0xp:00800c0e0 Size:8 Serial: 460 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+149 <CacheController.cpp:1010> {1607}- sys-L1d  scheduling request to bank 0: instr=>> #1092[00] @PC= v:0010646e8 opc=| d85260fa | Disas=ldsh [%o1 + 250], %o4          {executed} << MemoryMessage[Load Request]: Addr:0xp:00800c0fa Size:2 Serial: 459 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack eL1
+150 <CacheController.cpp:1010> {1607}- sys-L1d  scheduling request to bank 0: instr=>> #1095[00] @PC= v:0010646f4 opc=| f85a60e0 | Disas=ldx [%o1 + 224], %i4           {executed} << MemoryMessage[Load Request]: Addr:0xp:00800c0e0 Size:8 Serial: 460 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack eL1
+</code></pre>
+
+You can get some information from each line of the file:
+
+LineNumber <ComponentName:ComponentLineNumber> {Cycle}- [MemoryMessage]: instr=>> #InstructionNumber[CPUID] @PC= opc=| opcode | Disas= Disassembly {Semantic} Addr: Size: Serial: Core: DStream: Outstanding Msgs: 
+
+The debugger parses every line of the log file and categorizes them using Neo4j, so that you can trace and analyze the result more easily. 
+
+Each line in the log file becomes the smallest grey node. 
+
+
 * **Line**: the smallest grey circles
 * **Serial**: the red circle
 * **Address**: the green circle
