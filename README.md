@@ -187,6 +187,8 @@ Press Ctrl-c to stop simulation, enable more verbosity by **flexus.debug-set-sev
 
 Then you can find your **debug.out** with more information. Move the file under the **Flexus-Debugging/** directory. 
 
+Worked by Sujin Park.. If you have any further questions, please contact me at: persona@skku.edu
+
 [Flexus]:https://github.com/parsa-epfl/flexus
 [QFlex]:https://github.com/parsa-epfl/qflex
 [neo4jweb]:https://neo4j.com/ 
