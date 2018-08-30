@@ -46,9 +46,6 @@ After seeing Neo4j ***Started*** message, you can use Neo4j browser to analyze y
 ***(Neo4j Browser: http://localhost:7474/)***; Remote access is also supported.
 
 # How to use Flexus Debugger #
-
-![Serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/master/images/serial.png)
-
 Flexus Debugger makes it much easier to analyze the log file of Flexus.
 
 Here is part of the sample *debug.out*.
@@ -68,12 +65,32 @@ Here is part of the sample *debug.out*.
 
 You can get some information from each line of the file:
 
-LineNumber <ComponentName:ComponentLineNumber> {Cycle}- [MemoryMessage]: instr=>> #InstructionNumber[CPUID] @PC= opc=| opcode | Disas= Disassembly {Semantic} Addr: Size: Serial: Core: DStream: Outstanding Msgs: 
+<pre><code>LineNumber <ComponentName:ComponentLineNumber> {Cycle}- [MemoryMessage]: instr=>> #InstructionNumber[CPUID] @PC= opc=| opcode | Disas= Disassembly {Semantic} Addr: Size: Serial: Core: DStream: Outstanding Msgs: 
+</code></pre>
 
 The debugger parses every line of the log file and categorizes them using Neo4j, so that you can trace and analyze the result more easily. 
 
-Each line in the log file becomes the smallest grey node. 
+First of all, each line in the log file becomes the smallest grey node.
+Then, they are categorized based on the *Serial*, *Address*, and *Instruction*.
 
+After categorize them, each serial node generates *Trace* that shows visual graph trace for each serial.
+
+![Serial_sample](https://github.com/persona0220/Flexus-Debugging/blob/master/images/serial.png)
+
+Above figure shows the example for following information.
+<pre><code>
+658 <CacheImpl.cpp:170> {1631}- sys-L1d Received on Port FrontSideIn(Request) [0]: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7              {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+661 <CacheController.cpp:1010> {1631}- sys-L1d  scheduling request to bank 0: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7           {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack eL1
+662 <CacheController.cpp:864> {1631}- sys-L1d  schedule Request instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                 {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+663 <CacheController.cpp:1143> {1631}- sys-L1d  runRequestProcess 180: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                  {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+665 <BaseCacheControllerImpl.cpp:265> {1631}- sys-L1d  Handle Request: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                  {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+666 <BaseCacheControllerImpl.cpp:341> {1631}- sys-L1d  Examine Request instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                  {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+668 <InclusiveMESI.cpp:109> {1631}- sys-L1d  Do Request: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                {executed} << MemoryMessage[Load Request]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+670 <BaseCacheControllerImpl.cpp:365> {1631}- sys-L1d  Hit: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7             {executed} << MemoryMessage[Load Reply]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+671 <CacheController.cpp:1157> {1631}- sys-L1d   Action for instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7             {executed} << MemoryMessage[Load Reply]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack is: kReplyAndRemoveMAF
+719 <CacheController.cpp:1773> {1634}- sys-L1d  sendFront (D-1, I-0) : instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                  {executed} << MemoryMessage[Load Reply]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+721 <CacheImpl.cpp:238> {1634}- sys-L1d Sent on Port FrontSideOut_D [0]: instr=>> #1162[00] @PC= v:0010630fc opc=| ee5e22c0 | Disas=ldx [%i0 + 704], %l7                {executed} << MemoryMessage[Load Reply]: Addr:0xp:0080352c0 Size:8 Serial: 483 Core: 0 DStream: true Outstanding Msgs: 0 Requires Ack
+</code></pre>
 
 * **Line**: the smallest grey circles
 * **Serial**: the red circle
